@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: typeahead-postgres
+    environment:
+      POSTGRES_USER: typeahead
+      POSTGRES_PASSWORD: typeahead
+      POSTGRES_DB: typeahead
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U typeahead"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Three independent Redis instances act as the distributed cache nodes.
+  # The application routes prefix keys across them via consistent hashing.
+  redis-0:
+    image: redis:7-alpine
+    container_name: typeahead-redis-0
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+
+  redis-1:
+    image: redis:7-alpine
+    container_name: typeahead-redis-1
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+
+  redis-2:
+    image: redis:7-alpine
+    container_name: typeahead-redis-2
+    ports:
+      - "6381:6379"
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+
+volumes:
+  pgdata:
