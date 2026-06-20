@@ -41,14 +41,15 @@ function* generate(target) {
     }
   }
 
-  // Pad with combinatorial long-tail queries until we exceed the target.
+  // Pad with combinatorial long-tail queries until we exceed the target. The
+  // counter `i` is part of the query text, so every iteration yields a brand-new
+  // unique string and the loop always terminates.
   let i = 0;
   while (seen.size < target) {
     const head = HEADS[i % HEADS.length];
     const tail = TAILS[(i * 7) % TAILS.length];
     const extra = EXTRA[(i * 3) % EXTRA.length];
-    const n = (i % 5) + 1;
-    const q = normalize(`${head}${tail} ${extra} ${n}`);
+    const q = normalize(`${head}${tail} ${extra} ${i}`);
     i++;
     if (!q || seen.has(q)) continue;
     seen.add(q);
