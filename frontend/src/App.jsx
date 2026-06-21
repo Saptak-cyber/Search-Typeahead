@@ -6,7 +6,7 @@ import Trending from './components/Trending.jsx';
 
 export default function App() {
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState('basic'); // basic | recency — demo the difference
+  const [mode, setMode] = useState('recency'); // basic | recency — demo the difference
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
